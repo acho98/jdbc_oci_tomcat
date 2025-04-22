@@ -12,7 +12,13 @@ if [ -f "./gradlew" ]; then
     ./gradlew clean war
 else
     echo "Gradle wrapper not found. Trying with system Gradle..."
-    gradle clean war
+    if command -v gradle &> /dev/null; then
+        gradle clean war
+    else
+        echo "Error: Neither Gradle wrapper nor system Gradle is available."
+        echo "Please install Gradle or fix the Gradle wrapper."
+        exit 1
+    fi
 fi
 
 # Check if the build was successful
@@ -31,17 +37,17 @@ TEMP_DIR="temp_package"
 rm -rf "$TEMP_DIR"
 mkdir -p "$TEMP_DIR"
 
-# Copy files
-cp -r build/libs/*.war "$TEMP_DIR/"
-cp run_db_tester.sh "$TEMP_DIR/"
+# Copy files for the standalone package
+cp "$WAR_FILE" "$TEMP_DIR/mysql-db-connection-tester.war"
+cp run_standalone.sh "$TEMP_DIR/"
 cp README.md "$TEMP_DIR/"
 cp -r lib "$TEMP_DIR/" 2>/dev/null || mkdir -p "$TEMP_DIR/lib"
 
-# Make shell script executable
-chmod +x "$TEMP_DIR/run_db_tester.sh"
+# Make shell scripts executable
+chmod +x "$TEMP_DIR/run_standalone.sh"
 
 # Create ZIP file
-ZIP_FILE="dist/mysql-db-connection-tester-web.zip"
+ZIP_FILE="dist/mysql-db-connection-tester-standalone.zip"
 rm -f "$ZIP_FILE"
 
 if command -v zip &> /dev/null; then
@@ -58,4 +64,9 @@ rm -rf "$TEMP_DIR"
 
 echo "Packaging complete!"
 echo "The WAR file is available at: dist/$WAR_FILENAME"
-echo "The complete package is available at: $ZIP_FILE"
+echo "The standalone package is available at: $ZIP_FILE"
+echo ""
+echo "To run the application on a Linux server:"
+echo "1. Extract the standalone package"
+echo "2. Run: ./run_standalone.sh"
+echo "3. The application will be available at http://localhost:8080"
