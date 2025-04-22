@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test DB Connection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            color: #333;
+        }
+        .form-container {
+            width: 80%;
+            max-width: 600px;
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="password"], input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+        }
+        .checkbox-group label {
+            margin-left: 10px;
+            font-weight: normal;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            margin: 20px 0 0 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 80%;
+            min-height: 100px;
+            white-space: pre-wrap;
+            background-color: #f5f5f5;
+            font-family: monospace;
+        }
+        .section-title {
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-weight: bold;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+        }
+        .help-text {
+            font-size: 0.8em;
+            color: #666;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test DB Connection</h1>
+    
+    <div class="form-container">
+        <div class="section-title">Database Connection Parameters</div>
+        
+        <div class="form-group">
+            <label for="host">Database Host:</label>
+            <input type="text" id="host" value="localhost" placeholder="e.g., localhost or 127.0.0.1">
+        </div>
+        
+        <div class="form-group">
+            <label for="port">Port:</label>
+            <input type="number" id="port" value="3306" placeholder="e.g., 3306">
+        </div>
+        
+        <div class="form-group">
+            <label for="database">Database Name:</label>
+            <input type="text" id="database" value="mysql" placeholder="e.g., mysql">
+        </div>
+        
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" id="username" value="root" placeholder="e.g., root">
+        </div>
+        
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" placeholder="Enter your database password">
+        </div>
+        
+        <div class="form-group checkbox-group">
+            <input type="checkbox" id="useSSL">
+            <label for="useSSL">Use SSL Connection</label>
+        </div>
+        
+        <div class="section-title">JDBC Driver Configuration</div>
+        
+        <div class="form-group">
+            <label for="driverPath">Custom JDBC Driver Path (Optional):</label>
+            <input type="text" id="driverPath" placeholder="e.g., /path/to/mysql-connector-java-8.0.33.jar">
+            <div class="help-text">Leave empty to use the default driver. Provide a full path to a MySQL JDBC driver JAR file to use a custom driver.</div>
+        </div>
+        
+        <button id="connectButton">Connect to MySQL</button>
+    </div>
+    
+    <div id="result">Connection results will appear here...</div>
+
+    <script>
+        document.getElementById('connectButton').addEventListener('click', function() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = 'Connecting to database...';
+            
+            // Get form values
+            const host = document.getElementById('host').value;
+            const port = document.getElementById('port').value;
+            const database = document.getElementById('database').value;
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const useSSL = document.getElementById('useSSL').checked;
+            const driverPath = document.getElementById('driverPath').value;
+            
+            // Create URL with query parameters
+            const url = `/connect?host=${encodeURIComponent(host)}&port=${encodeURIComponent(port)}&database=${encodeURIComponent(database)}&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}&useSSL=${useSSL}&driverPath=${encodeURIComponent(driverPath)}`;
+            
+            fetch(url)
+                .then(response => response.text())
+                .then(data => {
+                    resultDiv.innerHTML = data;
+                })
+                .catch(error => {
+                    resultDiv.innerHTML = 'Error: ' + error;
+                });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+# Compiled class files
+*.class
+bin/
+
+# Build directories
+build/
+out/
+target/
+
+# Package files
+*.jar
+*.war
+*.ear
+
+# Exception for the lib directory (to track MySQL connector)
+!lib/*.jar
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+.classpath
+.project
+.settings/
+
+# Gradle
+.gradle/
+
+# Temporary files
+temp_package/
+
+# Logs
+*.log
+
+# OS-specific files
+.DS_Store
+Thumbs.db
